@@ -2,9 +2,16 @@
 
 > 一款讓生物資訊變得直觀的互動式學習 App。從 DNA 序列、序列比對，到系統發生樹、CRISPR、機器學習，邊看、邊做、邊學。
 
-以 iPhone 風格呈現的純前端原型，採用乾淨的科學感美學（青松石主色 + 米白／深色雙模式）。整個 App 用 React（透過瀏覽器內 Babel 編譯的 JSX）撰寫，**無需建置工具、無需後端**，打開 `index.html` 即可執行。
+以兩種版面呈現（桌面側欄版 + 手機底部 Tab 版）的純前端 App，採用乾淨的科學感美學（青松石主色 + 米白／深色雙模式）。整個 App 用 React（透過瀏覽器內 Babel 編譯的 JSX）撰寫，**無需建置工具、無需後端**，打開 `index.html` 即可執行。
 
-**🔗 線上展示：https://charlene717.github.io/bioinformatics-learning-app/**
+**🔗 線上版：[charlene717.github.io/bioinformatics-learning-app](https://charlene717.github.io/bioinformatics-learning-app/)**
+
+| 版本 | 連結 |
+|------|------|
+| 桌機 / 響應式 | [index.html](https://charlene717.github.io/bioinformatics-learning-app/index.html) |
+| 手機版 | [mobile.html](https://charlene717.github.io/bioinformatics-learning-app/mobile.html) |
+
+> 開啟 `index.html` 時，小螢幕會自動轉址到 `mobile.html`；加 `?web=1` 可強制看桌面版。
 
 ---
 
@@ -52,7 +59,9 @@
 
 ## 🚀 開始使用
 
-直接造訪線上版本：**https://charlene717.github.io/bioinformatics-learning-app/**
+直接造訪線上版本：
+- 桌機 / 響應式：**[index.html](https://charlene717.github.io/bioinformatics-learning-app/index.html)**
+- 手機版：**[mobile.html](https://charlene717.github.io/bioinformatics-learning-app/mobile.html)**
 
 或在本機執行（無需安裝任何套件）：
 
@@ -63,10 +72,21 @@ open index.html        # macOS
 
 # 方法二：用本機伺服器（避免某些瀏覽器的 file:// 限制）
 python3 -m http.server 8000
-# 然後瀏覽 http://localhost:8000
+# 然後瀏覽 http://localhost:8000/index.html 或 mobile.html
 ```
 
 > 首次載入需連網（從 CDN 取得 React、Babel、Google Fonts）。
+
+---
+
+## 🖥 兩種版本
+
+| 檔案 | 版本 | 說明 |
+|------|------|------|
+| `index.html` | **桌機 / 響應式** | 左側欄導覽 + 寬版置中內容；小螢幕自動轉址手機版 |
+| `mobile.html` | **手機** | 填滿視窗、底部 Tab Bar，行動裝置原生體驗 |
+
+兩者共用同一份課程、題庫、工具與單字卡程式碼，無需 build 步驟，純靜態檔案。
 
 ---
 
@@ -74,8 +94,10 @@ python3 -m http.server 8000
 
 ```
 .
-├── index.html        # 進入點：字體、主題變數、腳本載入、Tweaks 預設
-├── app.jsx           # App 殼層、Tab 路由、Tweaks 面板
+├── index.html        # 桌機版進入點（側欄佈局 + 小螢幕轉址）
+├── mobile.html       # 手機版進入點（底部 Tab）
+├── app-web.jsx       # 桌機殼層：側欄導覽 + 寬版內容
+├── app.jsx           # 手機殼層：Tab 路由 + Tweaks
 ├── screens.jsx       # 各畫面：首頁 / 課程 / 課程詳細 / 練習 / 我的
 ├── lessons.jsx       # 18 章教材內容 + 教學視覺化 LessonViz
 ├── widgets.jsx       # 共用元件、序列比對、單字卡、Quiz
@@ -84,7 +106,6 @@ python3 -m http.server 8000
 ├── quiz-bank.jsx     # 110+ 題題庫（依章節分類）
 ├── flashcards.jsx    # 90+ 張單字卡資料
 ├── study.jsx         # 書籤 + 間隔重複 SRS
-├── ios-frame.jsx     # iPhone 裝置外框元件
 └── tweaks-panel.jsx  # Tweaks 面板殼層
 ```
 
