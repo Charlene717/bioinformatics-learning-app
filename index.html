@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BioLearn · 生資學堂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  :root{
+    --bg: #EFEDE6;
+    --panel: #FAFAF7;
+    --surface: #FFFFFF;
+    --ink: #0F1614;
+    --ink-2: #2A3330;
+    --muted: #707974;
+    --line: #E5E2D9;
+    --line-2: #D7D3C7;
+    --accent: #0E9384;
+    --accent-ink: #064E47;
+    --accent-soft: #DCF1ED;
+    --warn: #C8651B;
+    --danger: #B5453C;
+    --A: #E25858;
+    --T: #4F94D8;
+    --G: #EAA532;
+    --C: #4FB37E;
+    --U: #9C77C7;
+    --N: #A8A89B;
+  }
+  html, body { margin: 0; padding: 0; background: #1A1916; min-height: 100vh; font-family: 'Manrope','Noto Sans TC',-apple-system,system-ui,sans-serif; color:#E5E2D9; }
+  body{
+    background:
+      radial-gradient(1100px 600px at 20% -10%, #2A2A24 0%, transparent 60%),
+      radial-gradient(900px 600px at 110% 110%, #1F2624 0%, transparent 55%),
+      #14130F;
+  }
+  *{ box-sizing: border-box; }
+  .stage{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+  .side{
+    width: 320px;
+    color: #C9C5B6;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
+  }
+  .side .logo{
+    display:flex; align-items:center; gap:10px;
+    font-size: 22px; font-weight: 600; letter-spacing: -.5px;
+    color: #F0EEE5;
+  }
+  .side .logo-mark{
+    width:28px; height:28px; border-radius:8px;
+    background: linear-gradient(135deg, #0E9384, #6CD0A5);
+    display:flex; align-items:center; justify-content:center;
+    color:#06231F; font-weight:700;
+    font-family:'JetBrains Mono', monospace;
+    box-shadow: 0 6px 18px rgba(14,147,132,.3);
+  }
+  .side .tagline{
+    margin-top: 18px; font-size: 14px; line-height: 1.55;
+    color:#8C8775;
+  }
+  .side .specs{
+    margin-top: 32px;
+    border-top: 1px solid #2A2A24;
+    padding-top: 18px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color:#7E7A6B;
+    display: grid;
+    gap: 10px;
+  }
+  .side .specs b{ color:#C9C5B6; font-weight:500; }
+  .pulse-dot{
+    width:6px;height:6px;border-radius:99px;background:#6CD0A5;
+    box-shadow:0 0 0 0 rgba(108,208,165,.6);
+    animation: pulse 1.8s infinite;
+    display:inline-block; margin-right:6px;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(108,208,165,.55); }
+    70%{ box-shadow:0 0 0 8px rgba(108,208,165,0); }
+    100%{ box-shadow:0 0 0 0 rgba(108,208,165,0); }
+  }
+  #app-root{
+    /* stage for the iOS device */
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div id="app-root"></div>
+</div>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="widgets.jsx"></script>
+<script type="text/babel" src="flashcards.jsx"></script>
+<script type="text/babel" src="quiz-bank.jsx"></script>
+<script type="text/babel" src="blast.jsx"></script>
+<script type="text/babel" src="tools.jsx"></script>
+<script type="text/babel" src="lessons.jsx"></script>
+<script type="text/babel" src="study.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+<script type="text/babel" src="app.jsx"></script>
+
+<script>
+  // tweak defaults (persisted on disk via host)
+  window.__BIOLEARN_TWEAKS = /*EDITMODE-BEGIN*/{
+    "accent": "magenta",
+    "dark": false,
+    "fontScale": 1,
+    "showStreak": true
+  }/*EDITMODE-END*/;
+</script>
+
+</body>
+</html>
