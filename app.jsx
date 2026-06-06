@@ -11,12 +11,17 @@ function App(){
   const dark = t.dark;
   const acc = ACCENTS[t.accent] || ACCENTS.teal;
 
-  // apply CSS vars at the device root
+  // apply CSS vars + viewport background
   const cssVars = {
     '--accent': acc.accent,
     '--accent-soft': acc.soft,
     '--accent-ink': acc.deep,
   };
+
+  // Keep the page background (behind the shell) in sync with theme
+  React.useEffect(()=>{
+    document.body.style.background = dark ? '#0F1410' : '#EFEDE6';
+  }, [dark]);
 
   const push = (screen) => setStack(s=>[...s, screen]);
   const pop = () => setStack(s=>s.slice(0,-1));
@@ -63,18 +68,21 @@ function App(){
 
   return (
     <>
-      <div style={cssVars} data-screen-label={currentLabel}>
-        <IOSDevice width={402} height={874} dark={dark}>
-          <div style={{
-            height:'100%', overflowY:'auto', overflowX:'hidden',
+      <div
+        style={{ ...cssVars, background: dark?'#0F1410':'#EFEDE6' }}
+        className="app-viewport"
+        data-screen-label={currentLabel}
+      >
+        <div
+          className="app-scroll"
+          style={{
             background: dark?'#0F1410':'#EFEDE6',
             fontSize: 16*t.fontScale,
-            position:'relative',
-          }}>
-            {screen}
-          </div>
-          <TabBar tab={tab} setTab={(id)=>{ setTab(id); setStack([]); }} dark={dark}/>
-        </IOSDevice>
+          }}
+        >
+          {screen}
+        </div>
+        <TabBar tab={tab} setTab={(id)=>{ setTab(id); setStack([]); }} dark={dark}/>
       </div>
 
       <TweaksPanel title="Tweaks">

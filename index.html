@@ -34,79 +34,34 @@
     --U: #9C77C7;
     --N: #A8A89B;
   }
-  html, body { margin: 0; padding: 0; background: #1A1916; min-height: 100vh; font-family: 'Manrope','Noto Sans TC',-apple-system,system-ui,sans-serif; color:#E5E2D9; }
-  body{
-    background:
-      radial-gradient(1100px 600px at 20% -10%, #2A2A24 0%, transparent 60%),
-      radial-gradient(900px 600px at 110% 110%, #1F2624 0%, transparent 55%),
-      #14130F;
-  }
+  html, body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Manrope','Noto Sans TC',-apple-system,system-ui,sans-serif; }
+  body{ background: var(--bg); color: var(--ink); }
   *{ box-sizing: border-box; }
-  .stage{
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    gap: 36px;
-    flex-wrap: wrap;
+
+  /* Full-viewport responsive app shell — no phone bezel / status bar */
+  .app-viewport{
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--bg);
   }
-  .side{
-    width: 320px;
-    color: #C9C5B6;
-    font-family: 'Space Grotesk', 'Manrope', sans-serif;
+  .app-scroll{
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
-  .side .logo{
-    display:flex; align-items:center; gap:10px;
-    font-size: 22px; font-weight: 600; letter-spacing: -.5px;
-    color: #F0EEE5;
-  }
-  .side .logo-mark{
-    width:28px; height:28px; border-radius:8px;
-    background: linear-gradient(135deg, #0E9384, #6CD0A5);
-    display:flex; align-items:center; justify-content:center;
-    color:#06231F; font-weight:700;
-    font-family:'JetBrains Mono', monospace;
-    box-shadow: 0 6px 18px rgba(14,147,132,.3);
-  }
-  .side .tagline{
-    margin-top: 18px; font-size: 14px; line-height: 1.55;
-    color:#8C8775;
-  }
-  .side .specs{
-    margin-top: 32px;
-    border-top: 1px solid #2A2A24;
-    padding-top: 18px;
-    font-family:'JetBrains Mono', monospace;
-    font-size: 11px;
-    color:#7E7A6B;
-    display: grid;
-    gap: 10px;
-  }
-  .side .specs b{ color:#C9C5B6; font-weight:500; }
-  .pulse-dot{
-    width:6px;height:6px;border-radius:99px;background:#6CD0A5;
-    box-shadow:0 0 0 0 rgba(108,208,165,.6);
-    animation: pulse 1.8s infinite;
-    display:inline-block; margin-right:6px;
-  }
-  @keyframes pulse{
-    0%{ box-shadow:0 0 0 0 rgba(108,208,165,.55); }
-    70%{ box-shadow:0 0 0 8px rgba(108,208,165,0); }
-    100%{ box-shadow:0 0 0 0 rgba(108,208,165,0); }
-  }
-  #app-root{
-    /* stage for the iOS device */
-  }
+  #app-root{ width: 100%; }
 </style>
 </head>
 <body>
 
-<div class="stage">
-  <div id="app-root"></div>
-</div>
+<div id="app-root"></div>
 
-<script type="text/babel" src="ios-frame.jsx"></script>
 <script type="text/babel" src="tweaks-panel.jsx"></script>
 <script type="text/babel" src="widgets.jsx"></script>
 <script type="text/babel" src="flashcards.jsx"></script>

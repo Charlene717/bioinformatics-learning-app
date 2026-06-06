@@ -374,7 +374,7 @@ function AppHeader({ title, subtitle, dark=false, right=null, onBack=null }){
   const fg = dark?'#F0EEE5':'#0F1614';
   const muted = dark?'#9E9C90':'#707974';
   return (
-    <div style={{ padding:'72px 20px 14px', display:'flex', alignItems:'flex-end', justifyContent:'space-between', gap:12 }}>
+    <div style={{ padding:'calc(env(safe-area-inset-top, 0px) + 26px) 20px 14px', display:'flex', alignItems:'flex-end', justifyContent:'space-between', gap:12 }}>
       <div style={{ flex:1, minWidth:0 }}>
         {onBack && (
           <button onClick={onBack} style={{
@@ -416,7 +416,7 @@ function TabBar({ tab, setTab, dark=false }){
 
   return (
     <div style={{
-      position:'absolute', left:8, right:8, bottom:14, height:64,
+      position:'absolute', left:8, right:8, bottom:'calc(env(safe-area-inset-bottom, 0px) + 12px)', height:64,
       background:bg, backdropFilter:'blur(20px) saturate(180%)', WebkitBackdropFilter:'blur(20px) saturate(180%)',
       border:`1px solid ${border}`, borderRadius:24,
       display:'flex', alignItems:'center', padding:'0 6px',
@@ -460,8 +460,8 @@ function HomeScreen({ dark, openCourse, openTool, streak, showStreak }){
     <div style={{ padding:'0 0 100px' }}>
       <AppHeader
         dark={dark}
-        subtitle="2026 / 05 / 25 · MON"
-        title={<>歡迎回來，<br/>今天學點 DNA</>}
+        subtitle="2026 / 06 / 06 · FRI"
+        title={<>解開生命的密碼 🧬<br/>從一段 DNA 開始</>}
         right={
           showStreak && (
             <div style={{
