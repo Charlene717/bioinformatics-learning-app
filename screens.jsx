@@ -1509,6 +1509,26 @@ function ProfileScreen({ dark, streak, setStreak }){
             ))}
           </div>
         </div>
+
+        {/* Web version link */}
+        <a href="index.html?web=1" style={{
+          marginTop:18, display:'flex', alignItems:'center', gap:12,
+          padding:'14px 16px', borderRadius:16,
+          background:surf, border:`1px solid ${line}`, textDecoration:'none',
+        }}>
+          <div style={{
+            width:40, height:40, borderRadius:11, flexShrink:0,
+            background: dark?'#14160E':'#F6F4EC',
+            display:'flex', alignItems:'center', justifyContent:'center',
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="14" rx="2" stroke="var(--accent)" strokeWidth="1.8"/><path d="M8 21h8M12 18v3" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round"/></svg>
+          </div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontFamily:'Space Grotesk, Noto Sans TC', fontWeight:600, fontSize:14, color:fg }}>切換到網頁版</div>
+            <div style={{ fontSize:11, color:muted, marginTop:2, fontFamily:'Noto Sans TC' }}>大螢幕的側欄式版面，適合電腦瀏覽</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 2l6 6-6 6" stroke={muted} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </a>
       </div>
     </div>
   );

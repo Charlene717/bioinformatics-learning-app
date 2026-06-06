@@ -3,22 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BioLearn · 生資學堂（網頁版）</title>
+<title>BioLearn · 生資學堂</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
-
-<!-- Small screens → mobile version (unless ?web=1 forces desktop) -->
-<script>
-  (function(){
-    try{
-      var forceWeb = /[?&]web=1/.test(location.search);
-      if(!forceWeb && Math.min(window.innerWidth, window.screen.width) < 760){
-        location.replace('mobile.html');
-      }
-    }catch(e){}
-  })();
-</script>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -50,74 +38,23 @@
   body{ background: var(--bg); color: var(--ink); }
   *{ box-sizing: border-box; }
 
-  /* ───────── Web (desktop) shell — sidebar + main ───────── */
-  .web-shell{
-    display: flex;
+  /* Full-viewport responsive app shell — no phone bezel / status bar */
+  .app-viewport{
+    position: relative;
     width: 100%;
-    min-height: 100vh;
-  }
-  .web-sidebar{
-    width: 248px;
-    flex-shrink: 0;
+    max-width: 560px;
+    margin: 0 auto;
     height: 100vh;
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 26px 16px 18px;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--bg);
   }
-  .web-brand{
-    display: flex; align-items: center; gap: 11px;
-    padding: 0 8px 22px;
-  }
-  .web-brand-mark{
-    width: 38px; height: 38px; border-radius: 11px;
-    background: linear-gradient(135deg, var(--accent), #6CD0A5);
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-weight: 700; font-size: 20px;
-    font-family: 'JetBrains Mono', monospace;
-    box-shadow: 0 6px 18px rgba(14,147,132,.25);
-  }
-  .web-nav{
-    display: flex; flex-direction: column; gap: 4px;
-    flex: 1;
-  }
-  .web-nav-item{
-    display: flex; align-items: center; gap: 12px;
-    padding: 11px 12px; border-radius: 12px;
-    border: none; background: transparent;
-    cursor: pointer; text-align: left;
-    font-family: 'Manrope', 'Noto Sans TC', sans-serif;
-    transition: background .15s;
-  }
-  .web-nav-item:hover{ background: rgba(0,0,0,.035); }
-  .web-nav-item.on:hover{ background: var(--accent-soft); }
-  .web-nav-icon{ display: flex; align-items: center; }
-  .web-nav-label{ flex: 1; font-size: 15px; font-weight: 600; }
-  .web-nav-no{ font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; }
-  .web-side-foot{ padding: 16px 8px 4px; }
-  .web-mobile-link{
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 8px 13px; border-radius: 10px;
-    font-size: 12.5px; font-weight: 600; text-decoration: none;
-    font-family: 'Manrope', 'Noto Sans TC', sans-serif;
-    transition: background .15s;
-  }
-  .web-mobile-link:hover{ background: rgba(0,0,0,.04); }
-
-  .web-main{
-    flex: 1;
-    height: 100vh;
+  .app-scroll{
+    height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
-  .web-col{
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  [data-dark] .web-nav-item:hover{ background: rgba(255,255,255,.05); }
-
   #app-root{ width: 100%; }
 </style>
 </head>
@@ -134,9 +71,10 @@
 <script type="text/babel" src="lessons.jsx"></script>
 <script type="text/babel" src="study.jsx"></script>
 <script type="text/babel" src="screens.jsx"></script>
-<script type="text/babel" src="app-web.jsx"></script>
+<script type="text/babel" src="app.jsx"></script>
 
 <script>
+  // tweak defaults (persisted on disk via host)
   window.__BIOLEARN_TWEAKS = /*EDITMODE-BEGIN*/{
     "accent": "magenta",
     "dark": false,
