@@ -456,14 +456,20 @@ function HomeScreen({ dark, openCourse, openTool, streak, showStreak }){
   const surf = dark?'#1E211D':'#fff';
   const line = dark?'#2A2D29':'#E5E2D9';
 
+  const prof = (typeof useProfiles === 'function') ? useProfiles() : null;
+  const name = prof?.active?.name || '同學';
+  const hour = new Date().getHours();
+  const greet = hour<5 ? '夜深了' : hour<12 ? '早安' : hour<18 ? '午安' : '晚安';
+  const fresh = !streak || streak <= 1; // brand-new / first-day user
+
   return (
     <div style={{ padding:'0 0 100px' }}>
       <AppHeader
         dark={dark}
-        subtitle="2026 / 06 / 06 · FRI"
-        title={<>解開生命的密碼 🧬<br/>從一段 DNA 開始</>}
+        subtitle={fresh ? 'NEW · 全新開始' : 'WELCOME BACK'}
+        title={<>{greet}，{name} 👋<br/>{fresh ? '開始你的生資旅程吧' : '繼續解開生命的密碼'}</>}
         right={
-          showStreak && (
+          showStreak && streak > 0 && (
             <div style={{
               padding:'10px 14px', borderRadius:14,
               background: dark?'rgba(255,165,50,.08)':'rgba(234,165,50,.12)',
@@ -1286,6 +1292,7 @@ function ToolScreen({ dark, tool, onBack, openReading }){
   if(tool==='codon') return <CodonTable dark={dark} onBack={onBack}/>;
   if(tool==='bookmarks') return <BookmarksScreen dark={dark} onBack={onBack} openReading={openReading} openTool={(t)=>onBack && onBack()}/>;
   if(tool==='review')    return <ReviewScreen dark={dark} onBack={onBack} openTool={(t)=>onBack && onBack()}/>;
+  if(tool==='account')   return <AccountScreen dark={dark} onBack={onBack}/>;
   return null;
 }
 
@@ -1413,24 +1420,38 @@ const AA_NAME = {
 };
 
 // ─────────── Profile screen ───────────
-function ProfileScreen({ dark, streak, setStreak }){
+function ProfileScreen({ dark, streak, setStreak, openTool }){
   const fg = dark?'#F0EEE5':'#0F1614';
   const muted = dark?'#9E9C90':'#707974';
   const surf = dark?'#1E211D':'#fff';
   const line = dark?'#2A2D29':'#E5E2D9';
+  const prof = (typeof useProfiles === 'function') ? useProfiles() : null;
+  const activeName = prof?.active?.name || '我的學習';
+  const activeEmoji = prof?.active?.emoji || '🧬';
+  const prog = (window.BioProfiles && prof) ? window.BioProfiles.progressFor(prof.activeId) : { xp:0, reviewed:0, cards:0, lessons:0, due:0 };
+  const savedCount = (prog.cards||0) + (prog.lessons||0);
+  const lvl = Math.floor((prog.xp||0)/200) + 1;
+  const xpInto = (prog.xp||0) % 200;
   const stats = [
-    { label:'總 XP', val:'1,240' },
-    { label:'已學', val:'18 節' },
-    { label:'答對率', val:'87%' },
+    { label:'總 XP', val:(prog.xp||0).toLocaleString() },
+    { label:'複習', val: prog.reviewed||0 },
+    { label:'收藏', val: savedCount },
   ];
   const badges = [
-    { name:'DNA 新手', icon:'🧬', got:true },
-    { name:'連勝 7 天', icon:'🔥', got:true },
-    { name:'比對達人', icon:'⇌', got:true },
-    { name:'BLAST 高手', icon:'🔍', got:false },
-    { name:'演化樹師', icon:'🌳', got:false },
-    { name:'蛋白工程', icon:'🧪', got:false },
+    { name:'DNA 新手', icon:'🧬', got: (prog.reviewed||0) >= 1 || savedCount >= 1, hint:'開始學習' },
+    { name:'初來乍到', icon:'🌱', got: (streak||0) >= 1, hint:'登入第一天' },
+    { name:'收藏家', icon:'📌', got: savedCount >= 10, hint:'收藏滿 10 項' },
+    { name:'複習新星', icon:'🔁', got: (prog.reviewed||0) >= 20, hint:'複習 20 張' },
+    { name:'連勝 7 天', icon:'🔥', got: (streak||0) >= 7, hint:'連續 7 天' },
+    { name:'連勝 30 天', icon:'⚡', got: (streak||0) >= 30, hint:'連續 30 天' },
+    { name:'勤學者', icon:'📚', got: (prog.reviewed||0) >= 40, hint:'複習 40 張' },
+    { name:'博學者', icon:'🎓', got: (prog.reviewed||0) >= 80, hint:'複習 80 張' },
+    { name:'升到 Lv5', icon:'⭐', got: lvl >= 5, hint:'達到 5 級' },
+    { name:'序列工匠', icon:'🧪', got: savedCount >= 25, hint:'收藏 25 項' },
+    { name:'生資大師', icon:'🏆', got: (prog.xp||0) >= 2000, hint:'累積 2000 XP' },
+    { name:'完美主義', icon:'💎', got: (prog.reviewed||0) >= 120, hint:'複習 120 張' },
   ];
+  const badgeGot = badges.filter(b=>b.got).length;
 
   return (
     <div style={{ padding:'0 0 100px' }}>
@@ -1444,20 +1465,20 @@ function ProfileScreen({ dark, streak, setStreak }){
         }}>
           <div style={{
             width:64, height:64, borderRadius:20,
-            background: 'linear-gradient(135deg, var(--accent), #6CD0A5)',
-            color:'#fff', display:'flex', alignItems:'center', justifyContent:'center',
-            fontFamily:'Space Grotesk', fontSize:24, fontWeight:700,
-          }}>陳</div>
+            background: 'var(--accent-soft)',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            fontSize:30,
+          }}>{activeEmoji}</div>
           <div style={{ flex:1 }}>
             <div style={{ fontFamily:'Space Grotesk, Noto Sans TC', fontSize:18, fontWeight:600, color:fg }}>
-              陳同學
+              {activeName}
             </div>
             <div style={{ fontSize:12, color:muted, fontFamily:'Noto Sans TC', marginTop:2 }}>
-              生物學系 · 大二 · Lv 6
+              生物資訊學習者 · Lv {lvl}
             </div>
-            <ProgressBar pct={0.62} color="var(--accent)" track={dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.06)'} height={4}/>
+            <ProgressBar pct={xpInto/200} color="var(--accent)" track={dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.06)'} height={4}/>
             <div style={{ fontSize:10, color:muted, fontFamily:"'JetBrains Mono',monospace", marginTop:4, letterSpacing:.5 }}>
-              760 / 1200 XP → LV 7
+              {xpInto} / 200 XP → LV {lvl+1}
             </div>
           </div>
         </div>
@@ -1484,10 +1505,10 @@ function ProfileScreen({ dark, streak, setStreak }){
           <div style={{ fontSize:36 }}>🔥</div>
           <div style={{ flex:1 }}>
             <div style={{ fontFamily:'Space Grotesk', fontSize:22, fontWeight:700, color:dark?'#F2C97A':'#945910' }}>
-              {streak} 天連勝
+              {streak > 0 ? `${streak} 天連勝` : '開始你的第一天'}
             </div>
             <div style={{ fontSize:12, color:dark?'#C7A57C':'#9B7A45', fontFamily:'Noto Sans TC' }}>
-              繼續保持！明天小測就可達 {streak+1} 天
+              {streak > 0 ? `繼續保持！明天再來就達 ${streak+1} 天` : '每天回來學習，累積連勝紀錄'}
             </div>
           </div>
         </div>
@@ -1495,20 +1516,41 @@ function ProfileScreen({ dark, streak, setStreak }){
         {/* badges */}
         <div style={{ marginTop:18 }}>
           <div style={{ fontFamily:'Space Grotesk, Noto Sans TC', fontWeight:600, fontSize:15, color:fg, marginBottom:10 }}>
-            徽章 <span style={{ color:muted, fontWeight:500, fontSize:13 }}>3 / 6</span>
+            徽章 <span style={{ color:muted, fontWeight:500, fontSize:13 }}>{badgeGot} / {badges.length}</span>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8 }}>
             {badges.map(b=>(
-              <div key={b.name} style={{
-                background:surf, borderRadius:14, padding:'14px 8px', textAlign:'center',
-                border:`1px solid ${line}`, opacity: b.got?1:.4,
+              <div key={b.name} title={b.hint||''} style={{
+                background: b.got ? surf : (dark?'#191C18':'#F3F1EA'), borderRadius:14, padding:'12px 8px', textAlign:'center',
+                border:`1px solid ${b.got?'var(--accent-soft)':line}`, opacity: b.got?1:.5,
               }}>
-                <div style={{ fontSize:28, filter: b.got?'none':'grayscale(1)' }}>{b.icon}</div>
-                <div style={{ fontSize:11, color:fg, marginTop:6, fontFamily:'Noto Sans TC' }}>{b.name}</div>
+                <div style={{ fontSize:26, filter: b.got?'none':'grayscale(1)' }}>{b.icon}</div>
+                <div style={{ fontSize:11, color:fg, marginTop:5, fontFamily:'Noto Sans TC', fontWeight: b.got?600:500 }}>{b.name}</div>
+                <div style={{ fontSize:9, color:muted, marginTop:2, fontFamily:'Noto Sans TC' }}>{b.got?'已獲得':b.hint}</div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Account / progress management */}
+        <button onClick={()=>openTool && openTool('account')} style={{
+          width:'100%', marginTop:18, display:'flex', alignItems:'center', gap:12,
+          padding:'14px 16px', borderRadius:16, textAlign:'left',
+          background:surf, border:`1px solid ${line}`, cursor:'pointer',
+        }}>
+          <div style={{
+            width:40, height:40, borderRadius:11, flexShrink:0,
+            background: dark?'#14160E':'#F6F4EC',
+            display:'flex', alignItems:'center', justifyContent:'center',
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="var(--accent)" strokeWidth="1.8"/><path d="M5 20c0-3.5 3.2-6 7-6s7 2.5 7 6" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round"/></svg>
+          </div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontFamily:'Space Grotesk, Noto Sans TC', fontWeight:600, fontSize:14, color:fg }}>帳號 / 進度管理</div>
+            <div style={{ fontSize:11, color:muted, marginTop:2, fontFamily:'Noto Sans TC' }}>切換使用者、匯出 / 匯入學習進度</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 2l6 6-6 6" stroke={muted} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
 
         {/* Web version link */}
         <a href="index.html?web=1" style={{

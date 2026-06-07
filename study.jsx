@@ -1,21 +1,30 @@
 // study.jsx — Bookmarks + Spaced Repetition System
 
-// ─────────── Storage keys ───────────
-const BOOKMARK_KEY = 'biolearn:bookmarks:v1';
-const SRS_KEY = 'biolearn:srs:v1';
+// ─────────── Storage keys (per active user) ───────────
+const BOOKMARK_KEY = 'biolearn:bookmarks:v1'; // legacy fallback
+const SRS_KEY = 'biolearn:srs:v1';            // legacy fallback
+
+function bmKey(){ return window.BioProfiles ? window.BioProfiles.userKey('bookmarks') : BOOKMARK_KEY; }
+function srsKey(){ return window.BioProfiles ? window.BioProfiles.userKey('srs') : SRS_KEY; }
 
 // ─────────── useBookmarks ───────────
 function useBookmarks(){
-  const [marks, setMarks] = React.useState(()=>{
-    try{
-      const raw = localStorage.getItem(BOOKMARK_KEY);
-      return raw ? JSON.parse(raw) : { cards:[], lessons:[] };
-    }catch(e){ return { cards:[], lessons:[] }; }
-  });
+  const load = ()=>{
+    try{ const raw = localStorage.getItem(bmKey()); return raw ? JSON.parse(raw) : { cards:[], lessons:[] }; }
+    catch(e){ return { cards:[], lessons:[] }; }
+  };
+  const [marks, setMarks] = React.useState(load);
+
+  // reload when the active user changes
+  React.useEffect(()=>{
+    const h = ()=> setMarks(load());
+    window.addEventListener('biolearn:userchange', h);
+    return ()=> window.removeEventListener('biolearn:userchange', h);
+  }, []);
 
   const save = (next)=>{
     setMarks(next);
-    try{ localStorage.setItem(BOOKMARK_KEY, JSON.stringify(next)); }catch(e){}
+    try{ localStorage.setItem(bmKey(), JSON.stringify(next)); }catch(e){}
   };
 
   const toggleCard = (term)=>{
@@ -39,16 +48,22 @@ function useBookmarks(){
 const SRS_INTERVALS = [0, 1, 3, 7];
 
 function useSRS(){
-  const [state, setState] = React.useState(()=>{
-    try{
-      const raw = localStorage.getItem(SRS_KEY);
-      return raw ? JSON.parse(raw) : {};
-    }catch(e){ return {}; }
-  });
+  const load = ()=>{
+    try{ const raw = localStorage.getItem(srsKey()); return raw ? JSON.parse(raw) : {}; }
+    catch(e){ return {}; }
+  };
+  const [state, setState] = React.useState(load);
+
+  // reload when the active user changes
+  React.useEffect(()=>{
+    const h = ()=> setState(load());
+    window.addEventListener('biolearn:userchange', h);
+    return ()=> window.removeEventListener('biolearn:userchange', h);
+  }, []);
 
   const save = (next)=>{
     setState(next);
-    try{ localStorage.setItem(SRS_KEY, JSON.stringify(next)); }catch(e){}
+    try{ localStorage.setItem(srsKey(), JSON.stringify(next)); }catch(e){}
   };
 
   const now = Date.now();

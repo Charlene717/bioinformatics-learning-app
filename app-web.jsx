@@ -65,7 +65,13 @@ function WebApp(){
 
   const [tab, setTab] = React.useState('home');
   const [stack, setStack] = React.useState([]);
-  const [streak] = React.useState(7);
+  const [streak, setStreak] = React.useState(()=> window.BioProfiles ? window.BioProfiles.touchStreak() : 0);
+
+  React.useEffect(()=>{
+    const h = ()=> setStreak(window.BioProfiles ? window.BioProfiles.touchStreak() : 0);
+    window.addEventListener('biolearn:userchange', h);
+    return ()=> window.removeEventListener('biolearn:userchange', h);
+  }, []);
 
   const dark = t.dark;
   const acc = ACCENTS[t.accent] || ACCENTS.teal;
@@ -113,7 +119,7 @@ function WebApp(){
     if(tab==='home') return <HomeScreen dark={dark} openCourse={openCourse} openTool={openTool} streak={streak} showStreak={t.showStreak}/>;
     if(tab==='courses') return <CoursesScreen dark={dark} openCourse={openCourse}/>;
     if(tab==='practice') return <PracticeScreen dark={dark} openTool={openTool}/>;
-    if(tab==='me') return <ProfileScreen dark={dark} streak={streak}/>;
+    if(tab==='me') return <ProfileScreen dark={dark} streak={streak} openTool={openTool}/>;
     return null;
   })();
 
